@@ -50,7 +50,7 @@
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
+			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
 			<exclusions>
 				<exclusion>
@@ -109,14 +109,9 @@
 	</dependencies>
 
 	<properties>
-		<hibernate.version>4.2.21.Final</hibernate.version>
-		<spring.version>4.3.22.RELEASE</spring.version>
-		<!-- <atomikos.version>3.8.0</atomikos.version> -->
-
-		<!-- <hibernate.version>5.2.2.Final</hibernate.version> -->
-		<!-- <spring.version>5.0.12.RELEASE</spring.version> -->
+		<hibernate.version>5.2.2.Final</hibernate.version>
+		<spring.version>5.1.4.RELEASE</spring.version>
 		<atomikos.version>4.0.6</atomikos.version>
-
 	</properties>
 
 </project>

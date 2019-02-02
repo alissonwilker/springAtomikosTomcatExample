@@ -8,6 +8,8 @@
  <persistence-unit name="PersistenceUnitA" transaction-type="JTA">
   <class>com.javacodegeeks.snippets.enterprise.model.EmployeeA</class>
   <properties>
+    <property name="hibernate.transaction.jta.platform"
+   value="com.javacodegeeks.snippets.enterprise.servlet.SpringJtaPlatformAdapter" />
    <property name="hibernate.transaction.manager_lookup_class"
    value="com.atomikos.icatch.jta.hibernate3.TransactionManagerLookup" />
    <property name="hibernate.transaction.factory_class"
@@ -18,6 +20,8 @@
  <persistence-unit name="PersistenceUnitB" transaction-type="JTA">
   <class>com.javacodegeeks.snippets.enterprise.model.EmployeeB</class>
   <properties>
+    <property name="hibernate.transaction.jta.platform"
+   value="com.javacodegeeks.snippets.enterprise.servlet.SpringJtaPlatformAdapter" />
    <property name="hibernate.transaction.manager_lookup_class"
    value="com.atomikos.icatch.jta.hibernate3.TransactionManagerLookup" />
    <property name="hibernate.transaction.factory_class"

@@ -41,7 +41,7 @@
 	<property name="minPoolSize"><value>1</value></property>
 </bean>
 
-<bean id="entityManagerFactoryA" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+<bean id="entityManagerFactoryA" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="springJtaPlatformAdapter">
 	<property name="persistenceXmlLocation">
             <value>classpath*:persistence.xml</value>
     </property>
@@ -54,7 +54,7 @@
 			</bean>
 		</property>
 	</bean>
-	<bean id="entityManagerFactoryB" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+	<bean id="entityManagerFactoryB" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="springJtaPlatformAdapter">
 	<property name="persistenceXmlLocation">
             <value>classpath*:persistence.xml</value>
     </property>
@@ -82,5 +82,21 @@
 		<property name="userTransaction" ref="atomikosUserTransaction" />
 		<property name="allowCustomIsolationLevels" value="true" />
 	</bean>
+	
+<bean id="txObjcoreManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="transactionManager">
+            <bean class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init" destroy-method="close">
+                <property name="forceShutdown" value="true" />
+            </bean>
+        </property>
+        <property name="userTransaction">
+            <bean class="com.atomikos.icatch.jta.UserTransactionImp">
+                <property name="transactionTimeout" value="300" />
+            </bean>
+        </property>
+    </bean>
 
+    <bean id="springJtaPlatformAdapter" class="com.javacodegeeks.snippets.enterprise.servlet.SpringJtaPlatformAdapter">
+        <property name="jtaTransactionManager" ref="txObjcoreManager" />
+    </bean>
 </beans>

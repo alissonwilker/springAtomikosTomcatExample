@@ -15,7 +15,7 @@ public class EmployeeBDAOImpl implements EmployeeBDAO {
 	private EntityManager entityManager;
 
 	public void persistEmployee(EmployeeB employee) throws Exception {
-		entityManager.persist(employee);
-//		throw new Exception();
+//		entityManager.persist(employee);
+		throw new Exception();
 	}
 }
