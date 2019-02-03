@@ -13,6 +13,11 @@
 	<tx:annotation-driven />
 	<tx:jta-transaction-manager />
 
+	<bean class="java.net.URI" id="dbUrl">
+		<constructor-arg
+			value="#{systemEnvironment['DATABASE_URL']}" />
+	</bean>
+
 	<bean id="dataSourceC"
 		class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init"
 		destroy-method="close">
@@ -24,12 +29,9 @@
 		</property>
 		<property name="xaProperties">
 			<props>
-				<prop key="databaseName">fabriki</prop>
-				<prop key="serverName">localhost</prop>
-				<prop key="portNumber">5433</prop>
-				<prop key="user">postgres</prop>
-				<prop key="password"></prop>
-				<prop key="url">jdbc:postgresql://localhost:5433/fabriki</prop>
+				<prop key="user">#{ @dbUrl.getUserInfo().split(':')[0] }</prop>
+				<prop key="password">#{ @dbUrl.getUserInfo().split(':')[1] }</prop>
+				<prop key="url" >#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() }</prop>
 			</props>
 		</property>
 		<property name="minPoolSize">
@@ -41,11 +43,12 @@
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 		depends-on="springJtaPlatformAdapter">
 		<property name="persistenceXmlLocation">
-			<value>classpath*:persistence.xml</value>
+			<value>classpath*:persistence.xml</value> 
 		</property>
 		<property name="persistenceUnitName"
 			value="FabrikiPersistenceUnit" />
-		<property name="dataSource" ref="dataSourceC" />
+		<property name="dataSource"
+			ref="dataSourceC" />
 		<property name="jpaVendorAdapter">
 			<bean
 				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
