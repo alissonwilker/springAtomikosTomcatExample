@@ -13,6 +13,32 @@
 	<tx:annotation-driven />
 	<tx:jta-transaction-manager />
 
+	<bean class="java.net.URI" id="dbUrl">
+		<constructor-arg
+			value="#{systemEnvironment['DATABASE_URL']}" />
+	</bean>
+
+	<bean id="fabrikiDataSource"
+		class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init"
+		destroy-method="close">
+		<property name="uniqueResourceName">
+			<value>FabrikiDataSource</value>
+		</property>
+		<property name="xaDataSourceClassName">
+			<value>org.postgresql.xa.PGXADataSource</value>
+		</property>
+		<property name="xaProperties">
+			<props>
+				<prop key="user">#{ @dbUrl.getUserInfo().split(':')[0] }</prop>
+				<prop key="password">#{ @dbUrl.getUserInfo().split(':')[1] }</prop>
+				<prop key="url" >#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() }</prop>
+			</props>
+		</property>
+		<property name="minPoolSize">
+			<value>1</value>
+		</property>
+	</bean>
+
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 		depends-on="springJtaPlatformAdapter">
@@ -21,7 +47,7 @@
 		</property>
 		<property name="persistenceUnitName"
 			value="FabrikiPersistenceUnit" />
-		<property name="dataSource" ref="FabrikiDataSource" />
+		<property name="dataSource" ref="fabrikiDataSource" />
 		<property name="jpaVendorAdapter">
 			<bean
 				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
