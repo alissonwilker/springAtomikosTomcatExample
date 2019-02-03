@@ -52,12 +52,7 @@ public abstract class AbstractBusiness<E, P extends Serializable> implements IBu
     @Override
     @Transactional(rollbackFor = Exception.class)
     public E atualizar(E entidade) throws EntidadeNaoEncontradaExcecao, EntidadeJaExisteExcecao {
-        entidade = dao.atualizar(entidade);
-        Instituicao i = new Instituicao();
-        i.setNome("alo");
-        i.setHabilitado(true);
-        adicionar((E)i);
-        return entidade;
+        return dao.atualizar(entidade);
     }
 
     @Override

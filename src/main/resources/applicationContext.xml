@@ -45,7 +45,7 @@
 		</property>
 		<property name="persistenceUnitName"
 			value="FabrikiPersistenceUnit" />
-		<property name="dataSource" ref="dataSourceC" />
+		<property name="dataSource" ref="FabrikiDataSource" />
 		<property name="jpaVendorAdapter">
 			<bean
 				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
