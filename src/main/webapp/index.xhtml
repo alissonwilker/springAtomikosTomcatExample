@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:f="http://java.sun.com/jsf/core"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+</h:head>
+
+<h:body>
+	<h:form id="instituicoesForm"
+		onkeypress="if (event.keyCode == 13) { return false; }">
+		<p:dataTable styleClass="textAtCenter" id="instituicoes"
+			var="instituicao" reflow="true" widgetVar="tabelaInstituicoes"
+			value="#{instituicaoController.dataModel}" rows="5" paginator="true"
+			paginatorPosition="bottom" emptyMessage="#{msg['app.nenhumItem']}"
+			lazy="true">
+
+			<p:column 
+				headerText="#{msg['app.nome']}">
+				<p:inputText label="#{msg['app.nome']}" required="true"
+					value="#{instituicao.nome}" />
+			</p:column>
+			<p:column headerText="#{msg['app.Habilitada']}">
+				<p:selectBooleanCheckbox value="#{instituicao.habilitado}" />
+			</p:column>
+			<p:column id="colunaAcoes" headerText="#{msg['app.Acoes']}">
+				<p:menuButton icon="corAzul fa fa-bars" value="#{msg['app.opcoes']}">
+					<p:menuitem icon="corVermelha fa fa-times-circle-o"
+						update="instituicoes"
+						action="#{instituicaoController.remover(instituicao)}"
+						value="#{msg['app.excluir']}">
+					</p:menuitem>
+				</p:menuButton>
+			</p:column>
+		</p:dataTable>
+
+	</h:form>
+	<p:commandButton icon="corVerde fa fa-plus-circle"
+		update=":instituicaoDialogo"
+		oncomplete="PF('criarInstituicaoDialogo').show()"
+		value="#{msg['app.instituicao']}">
+		<f:setPropertyActionListener
+			value="#{msg['app.instituicoes.criarInstituicao']}"
+			target="#{instituicaoController.tituloDialogo}" />
+		<f:setPropertyActionListener value="#{msg['app.instituicao.nova']}"
+			target="#{instituicaoController.tituloPainel}" />
+	</p:commandButton>
+
+	<p:dialog id="instituicaoDialogo"
+		header="#{instituicaoController.tituloDialogo}" draggable="false"
+		closeOnEscape="#{instituicaoController.instituicao == null}"
+		closable="#{instituicaoController.instituicao == null}"
+		onShow="PF('tabelaInstituicoes').clearFilters();document.getElementById('criarInstituicaoForm').reset();"
+		onHide="document.getElementById('criarInstituicaoForm').reset();"
+		widgetVar="criarInstituicaoDialogo" modal="true" resizable="false">
+		<h:form id="criarInstituicaoForm">
+			<p:panel id="instituicaoPanel"
+				header="#{instituicaoController.tituloPainel}">
+				<span> <p:panelGrid styleClass="ui-noborder" columns="2">
+						<p:outputLabel for="nomeInstituicao"
+							value="#{msg['app.instituicao.nome']}: " />
+						<p:inputText
+							disabled="#{instituicaoController.instituicao != null}"
+							id="nomeInstituicao" maxlength="39" required="true"
+							requiredMessage="#{msg['app.erroValidacao']}"
+							value="#{instituicaoController.nomeInstituicao}">
+							<p:keyFilter mask="alphanum" />
+						</p:inputText>
+					</p:panelGrid>
+				</span>
+				<div class="textAtCenter">
+					<p:commandButton icon="corVerde fa fa-check-square-o"
+						value="#{msg['app.Confirmar']}"
+						rendered="#{instituicaoController.instituicao == null}"
+						update="instituicoesForm:instituicoes,@form" validateClient="true"
+						oncomplete="hideDialogOnSuccess(args, PF('criarInstituicaoDialogo'));"
+						action="#{instituicaoController.criarInstituicao()}" />
+				</div>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+
+</h:body>
+
+<h:outputScript name="js/fabriki.js" />
+</html>
+
+
+

@@ -1,0 +1,8 @@
+<Context>
+	<Resource auth="Container"
+		driverClassName="org.postgresql.Driver" maxTotal="20"
+		maxWaitMillis="10000" name="FabrikiDataSource"
+		type="javax.sql.DataSource"
+		removeAbandonedOnBorrow="true"
+		factory="org.fabriki.model.persistence.FabrikiDataSourceFactory" />
+</Context>
