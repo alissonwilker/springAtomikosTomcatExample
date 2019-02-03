@@ -4,21 +4,22 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Named;
-
 import org.fabriki.dto.InstituicaoDto;
 import org.fabriki.excecao.EntidadeEmUsoExcecao;
 import org.fabriki.model.business.facade.InstituicaoBusinessFacade;
 import org.fabriki.view.utils.FacesMessageUtils;
 import org.fabriki.view.utils.JsfUtils;
 import org.fabriki.view.utils.JsfUtils.Pagina;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * Controller de Instituicao.
  * 
  * @see org.fabriki.view.controller.AbstractController
  */
-@Named
+@Component("instituicaoController")
+@Scope("view") 
 public class InstituicaoController extends AbstractFabrikiController<InstituicaoDto, Long> {
     private static final long serialVersionUID = 1L;
 

@@ -19,7 +19,7 @@ public abstract class AbstractFabrikiDao<E, P extends Serializable> extends Abst
 
     @PostConstruct
     public void init() {
-        entityManager = FabrikiEntityManagerFactory.createEntityManager();
+//        entityManager = FabrikiEntityManagerFactory.createEntityManager();
     }
     
     @PreDestroy

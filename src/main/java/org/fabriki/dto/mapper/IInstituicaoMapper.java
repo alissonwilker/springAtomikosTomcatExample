@@ -5,7 +5,7 @@ import org.fabriki.model.persistence.entity.Instituicao;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel="spring")
 public interface IInstituicaoMapper extends IGenericMapper<Instituicao, InstituicaoDto> {
     IInstituicaoMapper INSTANCE = Mappers.getMapper(IInstituicaoMapper.class);
 

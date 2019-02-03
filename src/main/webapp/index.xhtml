@@ -19,13 +19,15 @@
 			paginatorPosition="bottom" emptyMessage="#{msg['app.nenhumItem']}"
 			lazy="true">
 
-			<p:column 
-				headerText="#{msg['app.nome']}">
+			<p:column headerText="#{msg['app.nome']}">
 				<p:inputText label="#{msg['app.nome']}" required="true"
 					value="#{instituicao.nome}" />
 			</p:column>
 			<p:column headerText="#{msg['app.Habilitada']}">
-				<p:selectBooleanCheckbox value="#{instituicao.habilitado}" />
+				<p:selectBooleanCheckbox value="#{instituicao.habilitado}">
+					<p:ajax	listener="#{instituicaoController.atualizar(instituicao)}"
+						update="instituicoes" />
+				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column id="colunaAcoes" headerText="#{msg['app.Acoes']}">
 				<p:menuButton icon="corAzul fa fa-bars" value="#{msg['app.opcoes']}">

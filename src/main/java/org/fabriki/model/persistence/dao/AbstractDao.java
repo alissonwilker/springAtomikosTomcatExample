@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
@@ -39,6 +40,7 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     private static final long serialVersionUID = 1L;
     protected static final String LOG_TAG_PREFIX = " [SGBD]";
 
+    @PersistenceContext(unitName="FabrikiPersistenceUnit") 
     protected EntityManager entityManager;
     private Class<?> domain;
 
@@ -67,12 +69,12 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     public E adicionar(E entidade) throws EntidadeJaExisteExcecao {
         getLogger().info("Persistindo entidade...");
         try {
-            beginTransaction();
+//            beginTransaction();
             entityManager.persist(entidade);
-            commitTransaction();
+//            commitTransaction();
             return entidade;
         } catch (PersistenceException eeex) {
-            rollBackTransaction();
+//            rollBackTransaction();
             if (eeex.getCause() instanceof ConstraintViolationException) {
                 throw new EntidadeJaExisteExcecao(eeex);
             } else {
@@ -84,25 +86,25 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     @Override
     public void remover(P chavePrimaria) throws EntidadeNaoEncontradaExcecao {
         getLogger().info("Removendo entidade pela chave primaria...");
-        beginTransaction();
+//        beginTransaction();
         E entidade = recuperar(chavePrimaria);
-        remover(entidade);
-        commitTransaction();
+//        remover(entidade);
+//        commitTransaction();
     }
 
     @Override
     public void remover(E entidade) throws EntidadeNaoEncontradaExcecao {
         getLogger().info("Removendo entidade...");
         try {
-            beginTransaction();
+//            beginTransaction();
             entidade = entityManager.merge(entidade);
             entityManager.remove(entidade);
-            commitTransaction(true);
+//            commitTransaction(true);
         } catch (IllegalArgumentException iaex) {
-            rollBackTransaction();
+//            rollBackTransaction();
             throw new EntidadeNaoEncontradaExcecao(iaex);
         } catch (PersistenceException pe) {
-            rollBackTransaction();
+//            rollBackTransaction();
             if (pe.getCause().getMessage().contains("ConstraintViolationException")) {
                 throw new EntidadeEmUsoExcecao(pe);
             }
@@ -113,15 +115,15 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     public E atualizar(E entidade) throws EntidadeNaoEncontradaExcecao, EntidadeJaExisteExcecao {
         getLogger().info("Atualizando entidade...");
         try {
-            beginTransaction();
+//            beginTransaction();
             E entidadeAtualizada = entityManager.merge(entidade);
-            commitTransaction();
+//            commitTransaction();
             return entidadeAtualizada;
         } catch (IllegalArgumentException iaex) {
-            rollBackTransaction();
+//            rollBackTransaction();
             throw new EntidadeNaoEncontradaExcecao(iaex);
         } catch (PersistenceException eeex) {
-            rollBackTransaction();
+//            rollBackTransaction();
             if (eeex.getCause() instanceof ConstraintViolationException) {
                 throw new EntidadeJaExisteExcecao(eeex);
             } else {

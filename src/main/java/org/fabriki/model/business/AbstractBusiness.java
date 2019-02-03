@@ -9,6 +9,8 @@ import javax.inject.Inject;
 import org.fabriki.excecao.EntidadeJaExisteExcecao;
 import org.fabriki.excecao.EntidadeNaoEncontradaExcecao;
 import org.fabriki.model.persistence.dao.IDao;
+import org.fabriki.model.persistence.entity.Instituicao;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Classe abstrata que contém implementação de comportamento padrão da camada negocial de um módulo.
@@ -30,23 +32,32 @@ public abstract class AbstractBusiness<E, P extends Serializable> implements IBu
     protected abstract IDao<E, P> getDao();
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public E adicionar(E entidade) throws EntidadeJaExisteExcecao, EntidadeNaoEncontradaExcecao {
-        return dao.adicionar(entidade);
+        return dao.adicionar(entidade); 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void remover(E entidade) throws EntidadeNaoEncontradaExcecao {
         dao.remover(entidade);
-    }
+    } 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void remover(P chavePrimaria) throws EntidadeNaoEncontradaExcecao {
         dao.remover(chavePrimaria);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public E atualizar(E entidade) throws EntidadeNaoEncontradaExcecao, EntidadeJaExisteExcecao {
-        return dao.atualizar(entidade);
+        entidade = dao.atualizar(entidade);
+        Instituicao i = new Instituicao();
+        i.setNome("alo");
+        i.setHabilitado(true);
+        adicionar((E)i);
+        return entidade;
     }
 
     @Override

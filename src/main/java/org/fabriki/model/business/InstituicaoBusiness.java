@@ -5,12 +5,14 @@ import java.util.Map;
 
 import org.fabriki.model.persistence.dao.InstituicaoDao;
 import org.fabriki.model.persistence.entity.Instituicao;
+import org.springframework.stereotype.Service;
 
 /**
  * Componente de negócio do Fabriki.
  * 
  * @see org.fabriki.model.business.AbstractBusiness
  */
+@Service
 public class InstituicaoBusiness extends AbstractBusiness<Instituicao, Long> {
     private static final long serialVersionUID = 1L;
 

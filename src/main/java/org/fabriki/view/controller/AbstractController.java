@@ -25,7 +25,6 @@ import org.primefaces.model.SortOrder;
  * @param <P>
  *            tipo da chave primária da Entidade.
  */
-@ViewScoped
 public abstract class AbstractController<D, P extends Serializable> implements Serializable {
     private static final long serialVersionUID = 1L;
 

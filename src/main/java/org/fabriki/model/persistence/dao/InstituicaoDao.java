@@ -9,12 +9,14 @@ import javax.persistence.Query;
 import org.fabriki.log.FabrikiLoggerFactory;
 import org.fabriki.model.persistence.entity.Instituicao;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
 
 /**
  * DAO de Instituicao.
  * 
  * @see org.fabriki.model.persistence.dao.AbstractFabrikiDao
  */
+@Service
 public class InstituicaoDao extends AbstractFabrikiDao<Instituicao, Long> {
     private static final long serialVersionUID = 1L;
     protected static final Logger logger = FabrikiLoggerFactory.getLogger(MethodHandles.lookup().lookupClass(),
