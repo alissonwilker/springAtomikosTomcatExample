@@ -6,8 +6,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
 
-import org.fabriki.model.persistence.FabrikiEntityManagerFactory;
-
 /**
  * Classe abstrata que implementa comportamento padrão dos DAO's do Fabriki.
  * 
@@ -19,9 +17,9 @@ public abstract class AbstractFabrikiDao<E, P extends Serializable> extends Abst
 
     @PostConstruct
     public void init() {
-//        entityManager = FabrikiEntityManagerFactory.createEntityManager();
+        // entityManager = FabrikiEntityManagerFactory.createEntityManager();
     }
-    
+
     @PreDestroy
     public void finalize() {
         if (entityManager != null) {

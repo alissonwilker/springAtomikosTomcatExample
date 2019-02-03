@@ -7,46 +7,18 @@
 
 	<persistence-unit name="FabrikiPersistenceUnit"
 		transaction-type="JTA">
-<!-- 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider> -->
-<!-- 		<non-jta-data-source>java:comp/env/FabrikiDataSource</non-jta-data-source> -->
-
 		<properties>
-			<property name="hibernate.transaction.jta.platform"
-				value="com.javacodegeeks.snippets.enterprise.servlet.SpringJtaPlatformAdapter" />
-			<property name="hibernate.transaction.manager_lookup_class"
-				value="com.atomikos.icatch.jta.hibernate3.TransactionManagerLookup" />
-			<property name="hibernate.transaction.factory_class"
-				value="org.hibernate.transaction.CMTTransactionFactory" />
-
+		
 <!-- 			<property  -->
 <!-- 			name="javax.persistence.schema-generation.database.action" -->
 <!-- 			value="update" />    -->
-			<property name="hibernate.dialect"
-				value="org.hibernate.dialect.PostgreSQLDialect" />
+
 			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.format_sql" value="true" />
-		</properties>
-	</persistence-unit>
-
-	<persistence-unit name="PersistenceUnitA"
-		transaction-type="JTA">
-		<class>com.javacodegeeks.snippets.enterprise.model.EmployeeA</class>
-		<properties>
+			<property name="hibernate.dialect"
+				value="org.hibernate.dialect.PostgreSQLDialect" />
 			<property name="hibernate.transaction.jta.platform"
-				value="com.javacodegeeks.snippets.enterprise.servlet.SpringJtaPlatformAdapter" />
-			<property name="hibernate.transaction.manager_lookup_class"
-				value="com.atomikos.icatch.jta.hibernate3.TransactionManagerLookup" />
-			<property name="hibernate.transaction.factory_class"
-				value="org.hibernate.transaction.CMTTransactionFactory" />
-		</properties>
-	</persistence-unit>
-
-	<persistence-unit name="PersistenceUnitB"
-		transaction-type="JTA">
-		<class>com.javacodegeeks.snippets.enterprise.model.EmployeeB</class>
-		<properties>
-			<property name="hibernate.transaction.jta.platform"
-				value="com.javacodegeeks.snippets.enterprise.servlet.SpringJtaPlatformAdapter" />
+				value="org.fabriki.utils.spring.SpringJtaPlatformAdapter" />
 			<property name="hibernate.transaction.manager_lookup_class"
 				value="com.atomikos.icatch.jta.hibernate3.TransactionManagerLookup" />
 			<property name="hibernate.transaction.factory_class"

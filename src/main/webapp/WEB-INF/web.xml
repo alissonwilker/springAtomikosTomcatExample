@@ -19,38 +19,6 @@
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
-	<servlet>
-		<display-name>AppServlet</display-name>
-		<servlet-name>appServlet</servlet-name>
-		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>appServlet</servlet-name>
-		<url-pattern>/appServlet</url-pattern>
-	</servlet-mapping>
-
-	<resource-ref>
-		<description>MySQL DS</description>
-		<res-ref-name>jdbc/DataSourceA</res-ref-name>
-		<res-type>javax.sql.DataSource</res-type>
-		<res-auth>Container</res-auth>
-	</resource-ref>
-
-	<resource-ref>
-		<description>MySQL DS</description>
-		<res-ref-name>jdbc/DataSourceB</res-ref-name>
-		<res-type>javax.sql.DataSource</res-type>
-		<res-auth>Container</res-auth>
-	</resource-ref>
-
-	<resource-ref>
-		<description>PostgreSQL DS</description>
-		<res-ref-name>jdbc/DataSourceC</res-ref-name>
-		<res-type>javax.sql.DataSource</res-type>
-		<res-auth>Container</res-auth>
-	</resource-ref>
-
 	<error-page>
 		<location>/WEB-INF/pages/error.xhtml</location>
 	</error-page>

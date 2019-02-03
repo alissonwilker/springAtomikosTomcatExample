@@ -9,35 +9,11 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
 	<context:component-scan
-		base-package="org.fabriki.*,com.javacodegeeks.snippets.enterprise.*" />
+		base-package="org.fabriki.*" />
 	<tx:annotation-driven />
 	<tx:jta-transaction-manager />
 
-	<bean id="dataSourceC"
-		class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init"
-		destroy-method="close">
-		<property name="uniqueResourceName">
-			<value>DataSourceC</value>
-		</property>
-		<property name="xaDataSourceClassName">
-			<value>org.postgresql.xa.PGXADataSource</value>
-		</property>
-		<property name="xaProperties">
-			<props>
-				<prop key="databaseName">fabriki</prop>
-				<prop key="serverName">localhost</prop>
-				<prop key="portNumber">5433</prop>
-				<prop key="user">postgres</prop>
-				<prop key="password"></prop>
-				<prop key="url">jdbc:postgresql://localhost:5433/fabriki</prop>
-			</props>
-		</property>
-		<property name="minPoolSize">
-			<value>1</value>
-		</property>
-	</bean>
-
-	<bean id="entityManagerFactoryC"
+	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 		depends-on="springJtaPlatformAdapter">
 		<property name="persistenceXmlLocation">
@@ -45,96 +21,10 @@
 		</property>
 		<property name="persistenceUnitName"
 			value="FabrikiPersistenceUnit" />
-		<property name="dataSource" ref="dataSourceC" />
+		<property name="dataSource" ref="FabrikiDataSource" />
 		<property name="jpaVendorAdapter">
 			<bean
 				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="showSql" value="true" />
-				<property name="databasePlatform"
-					value="org.hibernate.dialect.PostgreSQLDialect" />
-			</bean>
-		</property>
-	</bean>
-
-	<bean id="dataSourceA"
-		class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init"
-		destroy-method="close">
-		<property name="uniqueResourceName">
-			<value>DataSourceA</value>
-		</property>
-		<property name="xaDataSourceClassName">
-			<value>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</value>
-		</property>
-		<property name="xaProperties">
-			<props>
-				<prop key="databaseName">companyA</prop>
-				<prop key="serverName">localhost</prop>
-				<prop key="port">3306</prop>
-				<prop key="user">root</prop>
-				<prop key="password">root</prop>
-				<prop key="url">jdbc:mysql://localhost:3306/companyA</prop>
-			</props>
-		</property>
-		<property name="minPoolSize">
-			<value>1</value>
-		</property>
-	</bean>
-
-	<bean id="dataSourceB"
-		class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init"
-		destroy-method="close">
-		<property name="uniqueResourceName">
-			<value>DataSourceB</value>
-		</property>
-		<property name="xaDataSourceClassName">
-			<value>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</value>
-		</property>
-		<property name="xaProperties">
-			<props>
-				<prop key="databaseName">companyB</prop>
-				<prop key="serverName">localhost</prop>
-				<prop key="port">3306</prop>
-				<prop key="user">root</prop>
-				<prop key="password">root</prop>
-				<prop key="url">jdbc:mysql://localhost:3306/companyB</prop>
-			</props>
-		</property>
-		<property name="minPoolSize">
-			<value>1</value>
-		</property>
-	</bean>
-
-	<bean id="entityManagerFactoryA"
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-		depends-on="springJtaPlatformAdapter">
-		<property name="persistenceXmlLocation">
-			<value>classpath*:persistence.xml</value>
-		</property>
-		<property name="persistenceUnitName" value="PersistenceUnitA" />
-		<property name="dataSource" ref="dataSourceA" />
-		<property name="jpaVendorAdapter">
-			<bean
-				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="showSql" value="true" />
-				<property name="databasePlatform"
-					value="org.hibernate.dialect.MySQL5InnoDBDialect" />
-			</bean>
-		</property>
-	</bean>
-	<bean id="entityManagerFactoryB"
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-		depends-on="springJtaPlatformAdapter">
-		<property name="persistenceXmlLocation">
-			<value>classpath*:persistence.xml</value>
-		</property>
-		<property name="persistenceUnitName" value="PersistenceUnitB" />
-		<property name="dataSource" ref="dataSourceB" />
-		<property name="jpaVendorAdapter">
-			<bean
-				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="showSql" value="true" />
-				<property name="databasePlatform"
-					value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			</bean>
 		</property>
 	</bean>
@@ -175,8 +65,19 @@
 		</property>
 	</bean>
 
+	<bean
+		class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<property name="scopes">
+			<map>
+				<entry key="view">
+					<bean class="org.fabriki.utils.spring.ViewScope" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
 	<bean id="springJtaPlatformAdapter"
-		class="com.javacodegeeks.snippets.enterprise.servlet.SpringJtaPlatformAdapter">
+		class="org.fabriki.utils.spring.SpringJtaPlatformAdapter">
 		<property name="jtaTransactionManager" ref="txObjcoreManager" />
 	</bean>
 </beans>

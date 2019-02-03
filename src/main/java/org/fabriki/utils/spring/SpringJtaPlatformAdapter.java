@@ -1,4 +1,4 @@
-package com.javacodegeeks.snippets.enterprise.servlet;
+package org.fabriki.utils.spring;
 
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;

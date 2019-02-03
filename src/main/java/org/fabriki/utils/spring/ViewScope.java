@@ -1,4 +1,4 @@
-package com.javacodegeeks.snippets.enterprise.spring;
+package org.fabriki.utils.spring;
 
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
