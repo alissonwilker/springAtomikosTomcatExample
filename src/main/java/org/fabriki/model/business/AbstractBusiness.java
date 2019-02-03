@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import org.fabriki.excecao.EntidadeJaExisteExcecao;
 import org.fabriki.excecao.EntidadeNaoEncontradaExcecao;
 import org.fabriki.model.persistence.dao.IDao;
-import org.fabriki.model.persistence.entity.Instituicao;
 import org.springframework.transaction.annotation.Transactional;
 
 /**

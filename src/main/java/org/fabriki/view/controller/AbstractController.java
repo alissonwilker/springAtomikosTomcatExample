@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 
 import org.fabriki.excecao.EntidadeEmUsoExcecao;
@@ -81,7 +80,7 @@ public abstract class AbstractController<D, P extends Serializable> implements S
         @Override
         public List<D> load(int first, int pageSize, String sortField, SortOrder sortOrder,
             Map<String, Object> filters) {
-            
+
             if (filters != null && filters.size() > 0) {
                 int totalRowCount = carregarTotalEntidadesFiltradas(filters);
                 this.setRowCount(totalRowCount);

@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -42,6 +41,7 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
 
     @PersistenceContext(unitName = "FabrikiPersistenceUnit")
     protected EntityManager entityManager;
+
     private Class<?> domain;
 
     protected abstract Logger getLogger();
@@ -163,37 +163,6 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     @Override
     public long getTotalCount(Map<String, Object> filtros) {
         return getTotalCount(filtros, true);
-    }
-
-    protected void beginTransaction() {
-        try {
-            entityManager.getTransaction().begin();
-        } catch (IllegalStateException e) {
-            rollBackTransaction();
-        }
-    }
-
-    protected void commitTransaction() {
-        commitTransaction(false);
-    }
-
-    protected void commitTransaction(boolean throwExcecao) {
-        try {
-            entityManager.getTransaction().commit();
-        } catch (IllegalStateException | RollbackException e) {
-            rollBackTransaction();
-            if (throwExcecao) {
-                throw e;
-            }
-        }
-    }
-
-    protected void rollBackTransaction() {
-        try {
-            entityManager.getTransaction().rollback();
-        } catch (IllegalStateException | PersistenceException e) {
-            e.printStackTrace();
-        }
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
  * 
  * @see org.fabriki.view.controller.AbstractController
  */
-@Component("instituicaoController")
-@Scope("view") 
+@Component
+@Scope("view")
 public class InstituicaoController extends AbstractFabrikiController<InstituicaoDto, Long> {
     private static final long serialVersionUID = 1L;
 

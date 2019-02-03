@@ -2,7 +2,6 @@ package org.fabriki.model.persistence.dao;
 
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
 
@@ -14,11 +13,6 @@ import javax.enterprise.context.RequestScoped;
 @RequestScoped
 public abstract class AbstractFabrikiDao<E, P extends Serializable> extends AbstractDao<E, P> {
     private static final long serialVersionUID = 1L;
-
-    @PostConstruct
-    public void init() {
-        // entityManager = FabrikiEntityManagerFactory.createEntityManager();
-    }
 
     @PreDestroy
     public void finalize() {
