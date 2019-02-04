@@ -14,11 +14,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class InstituicaoBusiness extends AbstractBusiness<Instituicao, Long> {
-    private static final long serialVersionUID = 1L;
-
+    
+    private InstituicaoDao dao;
+    
+    public InstituicaoBusiness(InstituicaoDao dao) {
+    	this.dao = dao;
+	}
+    
     @Override
     protected InstituicaoDao getDao() {
-        return (InstituicaoDao) dao;
+        return dao;
     }
 
     public Instituicao recuperarPorNome(String nomeInstituicao) {
