@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
 import org.fabriki.excecao.EntidadeEmUsoExcecao;
 import org.fabriki.excecao.EntidadeJaExisteExcecao;
@@ -24,11 +23,8 @@ import org.primefaces.model.SortOrder;
  * @param <P>
  *            tipo da chave primária da Entidade.
  */
-public abstract class AbstractController<D, P extends Serializable> implements Serializable {
-    private static final long serialVersionUID = 1L;
+public abstract class AbstractController<D, P extends Serializable> {
 
-    @Inject
-    protected IBusinessFacade<D, P> businessFacade;
     protected DefaultLazyDataModel dataModel;
 
     class DefaultLazyDataModel extends LazyDataModel<D> {
@@ -42,19 +38,19 @@ public abstract class AbstractController<D, P extends Serializable> implements S
         }
 
         protected int carregarTotalEntidades() {
-            return (int) businessFacade.getTotalCount();
+            return (int) getBusinessFacade().getTotalCount();
         }
 
         protected int carregarTotalEntidadesFiltradas(Map<String, Object> filters) {
-            return (int) businessFacade.getTotalCount(filters);
+            return (int) getBusinessFacade().getTotalCount(filters);
         }
 
         protected List<D> carregarEntidades(int first, int pageSize) {
-            return businessFacade.listar(first, pageSize);
+            return getBusinessFacade().listar(first, pageSize);
         }
 
         protected List<D> carregarEntidades(int first, int pageSize, Map<String, Object> filters) {
-            return businessFacade.listar(first, pageSize, filters);
+            return getBusinessFacade().listar(first, pageSize, filters);
         }
 
         private void atualizarRowCount() {
@@ -132,7 +128,7 @@ public abstract class AbstractController<D, P extends Serializable> implements S
      */
     public D adicionar(D dto) {
         try {
-            dto = businessFacade.adicionar(dto);
+            dto = getBusinessFacade().adicionar(dto);
             adicionarMensagemSucesso();
             return dto;
         } catch (EntidadeJaExisteExcecao e) {
@@ -153,7 +149,7 @@ public abstract class AbstractController<D, P extends Serializable> implements S
      */
     public D atualizar(D dto) {
         try {
-            dto = businessFacade.atualizar(dto);
+            dto = getBusinessFacade().atualizar(dto);
             adicionarMensagemSucesso();
             return dto;
         } catch (EntidadeJaExisteExcecao e) {
@@ -173,7 +169,7 @@ public abstract class AbstractController<D, P extends Serializable> implements S
      */
     public void remover(D dto) {
         try {
-            businessFacade.remover(dto);
+        	getBusinessFacade().remover(dto);
             adicionarMensagemSucesso();
         } catch (EntidadeNaoEncontradaExcecao e) {
             adicionarMensagemItemNaoEncontrado();

@@ -19,7 +19,7 @@ import org.fabriki.excecao.EntidadeNaoEncontradaExcecao;
  * 
  * @see org.fabriki.model.business.IBusiness
  */
-public interface IBusinessFacade<D, P extends Serializable> extends Serializable {
+public interface IBusinessFacade<D, P extends Serializable> {
     
     D adicionar(D dto) throws EntidadeJaExisteExcecao, EntidadeNaoEncontradaExcecao;
 

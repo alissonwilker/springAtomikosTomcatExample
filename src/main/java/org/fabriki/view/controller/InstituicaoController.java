@@ -1,28 +1,35 @@
 package org.fabriki.view.controller;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import org.fabriki.dto.InstituicaoDto;
 import org.fabriki.excecao.EntidadeEmUsoExcecao;
+import org.fabriki.model.business.facade.IBusinessFacade;
 import org.fabriki.model.business.facade.InstituicaoBusinessFacade;
 import org.fabriki.view.utils.FacesMessageUtils;
 import org.fabriki.view.utils.JsfUtils;
 import org.fabriki.view.utils.JsfUtils.Pagina;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 /**
  * Controller de Instituicao.
  * 
  * @see org.fabriki.view.controller.AbstractController
  */
-@Component
+@Controller
 @Scope("view")
-public class InstituicaoController extends AbstractFabrikiController<InstituicaoDto, Long> {
-    private static final long serialVersionUID = 1L;
+public class InstituicaoController extends AbstractFabrikiController<InstituicaoDto, Long> implements Serializable {
+    
+	private static final long serialVersionUID = 1L;
 
+	@Autowired
+    private InstituicaoBusinessFacade instituicaoBusinessFacade;
+    
     private InstituicaoDto instituicao;
 
     private String nomeInstituicao;
@@ -31,6 +38,11 @@ public class InstituicaoController extends AbstractFabrikiController<Instituicao
     private String tituloDialogo;
     private String tituloPainel;
 
+    @Override
+	protected IBusinessFacade<InstituicaoDto, Long> getBusinessFacade() {
+		return instituicaoBusinessFacade;
+	}
+    
     class InstituicaoLazyDataModel extends DefaultLazyDataModel {
         private static final long serialVersionUID = 1L;
 
@@ -59,11 +71,6 @@ public class InstituicaoController extends AbstractFabrikiController<Instituicao
     @Override
     protected DefaultLazyDataModel criarDataModel() {
         return new InstituicaoLazyDataModel();
-    }
-
-    @Override
-    protected InstituicaoBusinessFacade getBusinessFacade() {
-        return (InstituicaoBusinessFacade) businessFacade;
     }
 
     public String getTituloDialogo() {
@@ -148,5 +155,4 @@ public class InstituicaoController extends AbstractFabrikiController<Instituicao
         }
         refreshDataModel();
     }
-
 }

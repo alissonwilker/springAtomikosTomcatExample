@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.fabriki.excecao.EntidadeJaExisteExcecao;
 import org.fabriki.excecao.EntidadeNaoEncontradaExcecao;
 import org.fabriki.model.persistence.dao.IDao;
@@ -21,47 +19,42 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  * @see org.fabriki.model.business.IBusiness
  */
-public abstract class AbstractBusiness<E, P extends Serializable> implements IBusiness<E, P>, Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Inject
-    protected IDao<E, P> dao;
+public abstract class AbstractBusiness<E, P extends Serializable> implements IBusiness<E, P> {
 
     protected abstract IDao<E, P> getDao();
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public E adicionar(E entidade) throws EntidadeJaExisteExcecao, EntidadeNaoEncontradaExcecao {
-        return dao.adicionar(entidade); 
+        return getDao().adicionar(entidade); 
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void remover(E entidade) throws EntidadeNaoEncontradaExcecao {
-        dao.remover(entidade);
+    	getDao().remover(entidade);
     } 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void remover(P chavePrimaria) throws EntidadeNaoEncontradaExcecao {
-        dao.remover(chavePrimaria);
+    	getDao().remover(chavePrimaria);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public E atualizar(E entidade) throws EntidadeNaoEncontradaExcecao, EntidadeJaExisteExcecao {
-        return dao.atualizar(entidade);
+        return getDao().atualizar(entidade);
     }
 
     @Override
     public List<E> listar() {
-        return dao.listar();
+        return getDao().listar();
     }
 
     @Override
     public List<E> listar(int primeiroIndice, int tamanhoPagina) {
-        return dao.listar(primeiroIndice, tamanhoPagina);
+        return getDao().listar(primeiroIndice, tamanhoPagina);
     }
 
     @Override
@@ -71,12 +64,12 @@ public abstract class AbstractBusiness<E, P extends Serializable> implements IBu
 
     @Override
     public E recuperar(P chavePrimaria) throws EntidadeNaoEncontradaExcecao {
-        return dao.recuperar(chavePrimaria);
+        return getDao().recuperar(chavePrimaria);
     }
 
     @Override
     public long getTotalCount() {
-        return dao.getTotalCount();
+        return getDao().getTotalCount();
     }
 
     @Override
@@ -86,12 +79,12 @@ public abstract class AbstractBusiness<E, P extends Serializable> implements IBu
 
     @Override
     public long getTotalCount(Map<String, Object> filtros, boolean andClause) {
-        return dao.getTotalCount(filtros, andClause);
+        return getDao().getTotalCount(filtros, andClause);
     }
 
     @Override
     public List<E> listar(int primeiroIndice, int tamanhoPagina, Map<String, Object> filtros, boolean andClause) {
-        return dao.listar(primeiroIndice, tamanhoPagina, filtros, andClause);
+        return getDao().listar(primeiroIndice, tamanhoPagina, filtros, andClause);
     }
 
 }

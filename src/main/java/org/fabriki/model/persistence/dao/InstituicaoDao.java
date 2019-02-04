@@ -9,18 +9,17 @@ import javax.persistence.Query;
 import org.fabriki.log.FabrikiLoggerFactory;
 import org.fabriki.model.persistence.entity.Instituicao;
 import org.slf4j.Logger;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 /**
  * DAO de Instituicao.
  * 
  * @see org.fabriki.model.persistence.dao.AbstractFabrikiDao
  */
-@Service
+@Repository
 public class InstituicaoDao extends AbstractFabrikiDao<Instituicao, Long> {
-    private static final long serialVersionUID = 1L;
-    protected static final Logger logger = FabrikiLoggerFactory.getLogger(MethodHandles.lookup().lookupClass(),
-        LOG_TAG_PREFIX);
+    
+    private static final Logger logger = FabrikiLoggerFactory.getLogger(MethodHandles.lookup().lookupClass(), LOG_TAG_PREFIX);
 
     @Override
     protected Logger getLogger() {
@@ -29,14 +28,14 @@ public class InstituicaoDao extends AbstractFabrikiDao<Instituicao, Long> {
 
     public Instituicao recuperarPorNome(String nomeInstituicao) {
         logger.info("Recuperando instituicao por nome...");
-        Query query = entityManager.createNamedQuery("Instituicao.recuperarPorNome");
+        Query query = getSession().createNamedQuery("Instituicao.recuperarPorNome");
         query.setParameter("nomeInstituicao", nomeInstituicao);
         return (Instituicao) query.getSingleResult();
     }
 
     public long getTotalCountPorUserLogin(String userLogin) {
         logger.info("Recuperando total de instituicoes de um userLogin...");
-        Query query = entityManager.createNamedQuery("Instituicao.getTotalCountPorUserLogin");
+        Query query = getSession().createNamedQuery("Instituicao.getTotalCountPorUserLogin");
         query.setParameter("userLogin", userLogin);
         return (long) query.getSingleResult();
     }
@@ -44,7 +43,7 @@ public class InstituicaoDao extends AbstractFabrikiDao<Instituicao, Long> {
     @SuppressWarnings("unchecked")
     public List<Instituicao> listarPorUserLogin(String userLogin, int primeiroIndice, int tamanhoPagina) {
         logger.info("Listando instituicoes por user login...");
-        Query query = entityManager.createNamedQuery("Instituicao.listarPorUserLogin");
+        Query query = getSession().createNamedQuery("Instituicao.listarPorUserLogin");
         query.setParameter("userLogin", userLogin);
         query.setFirstResult(primeiroIndice);
         query.setMaxResults(tamanhoPagina);
@@ -54,7 +53,7 @@ public class InstituicaoDao extends AbstractFabrikiDao<Instituicao, Long> {
     @SuppressWarnings("unchecked")
     public List<Instituicao> listarParaCompartilhamento(String userLogin, String nomeInstituicao) {
         logger.info("Listando instituicoes por user login sem paginação...");
-        Query query = entityManager.createNamedQuery("Instituicao.listarParaCompartilhamento");
+        Query query = getSession().createNamedQuery("Instituicao.listarParaCompartilhamento");
         query.setParameter("userLogin", userLogin);
         query.setParameter("nomeInstituicao", nomeInstituicao);
         return query.getResultList();
@@ -64,10 +63,10 @@ public class InstituicaoDao extends AbstractFabrikiDao<Instituicao, Long> {
         logger.info("Recuperando total de instituicoes habilitadas...");
         Query query = null;
         if (filtros != null && filtros.size() > 0) {
-            query = entityManager.createNamedQuery("Instituicao.getTotalCountHabilitadosPorNome");
+            query = getSession().createNamedQuery("Instituicao.getTotalCountHabilitadosPorNome");
             query.setParameter("nomeInstituicao", "%" + ((String)filtros.get("nome")).toLowerCase() + "%");
         } else  {
-            query = entityManager.createNamedQuery("Instituicao.getTotalCountHabilitados");
+            query = getSession().createNamedQuery("Instituicao.getTotalCountHabilitados");
         }
         return (long) query.getSingleResult();
     }
@@ -78,10 +77,10 @@ public class InstituicaoDao extends AbstractFabrikiDao<Instituicao, Long> {
         
         Query query = null;
         if (filtros != null && filtros.size() > 0) {
-            query = entityManager.createNamedQuery("Instituicao.listarHabilitadosPorNome");
+            query = getSession().createNamedQuery("Instituicao.listarHabilitadosPorNome");
             query.setParameter("nomeInstituicao", "%" + ((String)filtros.get("nome")).toLowerCase() + "%");
         } else  {
-            query = entityManager.createNamedQuery("Instituicao.listarHabilitados");
+            query = getSession().createNamedQuery("Instituicao.listarHabilitados");
         }
         query.setFirstResult(primeiroIndice);
         query.setMaxResults(tamanhoPagina);

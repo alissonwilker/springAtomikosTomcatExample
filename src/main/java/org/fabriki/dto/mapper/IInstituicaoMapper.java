@@ -7,6 +7,8 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel="spring")
 public interface IInstituicaoMapper extends IGenericMapper<Instituicao, InstituicaoDto> {
+	
     IInstituicaoMapper INSTANCE = Mappers.getMapper(IInstituicaoMapper.class);
 
+    
 }

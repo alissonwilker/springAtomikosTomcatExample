@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -23,8 +21,12 @@ import javax.persistence.criteria.Root;
 import org.fabriki.excecao.EntidadeEmUsoExcecao;
 import org.fabriki.excecao.EntidadeJaExisteExcecao;
 import org.fabriki.excecao.EntidadeNaoEncontradaExcecao;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Classe abstrata que implementa comportamento padrão de um DAO.
@@ -36,16 +38,23 @@ import org.slf4j.Logger;
  * 
  * @see org.fabriki.model.persistence.dao.IDao
  */
-public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, P>, Serializable {
-    private static final long serialVersionUID = 1L;
-    protected static final String LOG_TAG_PREFIX = " [SGBD]";
+public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, P> {
+    
+	protected static final String LOG_TAG_PREFIX = " [SGBD]";
 
-    @PersistenceContext(unitName = "FabrikiPersistenceUnit", type=PersistenceContextType.EXTENDED)
-    protected EntityManager entityManager;
+    @Autowired SessionFactory sessionFactory;
 
     private Class<?> domain;
 
     protected abstract Logger getLogger();
+    
+    protected Session getSession() {
+    	try {
+    		return sessionFactory.getCurrentSession();
+    	} catch (HibernateException e) {
+    		return sessionFactory.openSession();
+    	}
+    }
 
     protected Class<?> getDomainClass() {
         if (this.domain == null) {
@@ -70,7 +79,7 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     public E adicionar(E entidade) throws EntidadeJaExisteExcecao {
         getLogger().info("Persistindo entidade...");
         try {
-            entityManager.persist(entidade);
+            getSession().save(entidade);
             return entidade;
         } catch (PersistenceException eeex) {
             if (eeex.getCause() instanceof ConstraintViolationException) {
@@ -88,12 +97,13 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
         remover(entidade);
     }
 
-    @Override
+	@Override
     public void remover(E entidade) throws EntidadeNaoEncontradaExcecao {
         getLogger().info("Removendo entidade...");
         try {
-            entidade = entityManager.merge(entidade);
-            entityManager.remove(entidade);
+        	Session session = getSession();
+//            session.merge(entidade);
+            session.delete(entidade);
         } catch (IllegalArgumentException iaex) {
             throw new EntidadeNaoEncontradaExcecao(iaex);
         } catch (PersistenceException pe) {
@@ -107,7 +117,8 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     public E atualizar(E entidade) throws EntidadeNaoEncontradaExcecao, EntidadeJaExisteExcecao {
         getLogger().info("Atualizando entidade...");
         try {
-            return entityManager.merge(entidade);
+            getSession().saveOrUpdate(entidade);
+            return entidade;
         } catch (IllegalArgumentException iaex) {
             throw new EntidadeNaoEncontradaExcecao(iaex);
         } catch (PersistenceException eeex) {
@@ -123,7 +134,7 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     @Override
     public E recuperar(P chavePrimaria) throws EntidadeNaoEncontradaExcecao {
         getLogger().info("Recuperando entidade pela chave primaria...");
-        E entity = (E) entityManager.find(getDomainClass(), chavePrimaria);
+        E entity = (E) getSession().find(getDomainClass(), chavePrimaria);
         if (entity == null) {
             throw new EntidadeNaoEncontradaExcecao();
         }
@@ -134,19 +145,19 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     @Override
     public List<E> listar() {
         getLogger().info("Listando entidades...");
-        return entityManager.createQuery("FROM " + getDomainClass().getSimpleName() + " ORDER BY id DESC")
-            .getResultList();
+        return getSession()
+    			.createQuery("FROM " + getDomainClass().getSimpleName() + " ORDER BY id DESC")
+    			.getResultList();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public List<E> listar(int primeiroIndice, int tamanhoPagina) {
         getLogger().info("Listando entidades com paginação...");
-        Query query = entityManager.createQuery("FROM " + getDomainClass().getSimpleName() + " ORDER BY id DESC");
+        Query query = getSession().createQuery("FROM " + getDomainClass().getSimpleName() + " ORDER BY id DESC");
         query.setFirstResult(primeiroIndice);
         query.setMaxResults(tamanhoPagina);
-        List<E> entidades = query.getResultList();
-        return entidades;
+        return query.getResultList();
     }
 
     @Override
@@ -157,7 +168,7 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     @Override
     public long getTotalCount() {
         getLogger().info("Recuperando total de registros na tabela...");
-        Query query = entityManager.createQuery("SELECT count(id) FROM " + getDomainClass().getSimpleName());
+        Query query = getSession().createQuery("SELECT count(id) FROM " + getDomainClass().getSimpleName());
         return (long) query.getSingleResult();
     }
 
@@ -170,7 +181,7 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     @Override
     public long getTotalCount(Map<String, Object> filtros, boolean andClause) {
         getLogger().info("Recuperando total de registros na tabela com filtros...");
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaBuilder cb = getSession().getCriteriaBuilder();
         Class clazz = getDomainClass();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
         Root root = criteriaQuery.from(clazz);
@@ -213,7 +224,7 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
                 }
             }
         }
-        Long count = entityManager.createQuery(select).getSingleResult();
+        Long count = getSession().createQuery(select).getSingleResult();
         return count.intValue();
     }
 
@@ -222,6 +233,7 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     public List<E> listar(int primeiroIndice, int tamanhoPagina, Map<String, Object> filtros, boolean andClause) {
         getLogger().info("Listando entidades com paginação e filtros...");
 
+        EntityManager entityManager = (EntityManager) getSession().getDelegate();
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         Class clazz = getDomainClass();
         CriteriaQuery criteriaQuery = cb.createQuery(clazz);

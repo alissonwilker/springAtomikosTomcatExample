@@ -8,12 +8,14 @@
 		<welcome-file>index.xhtml</welcome-file>
 	</welcome-file-list>
 
+    <!--
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 			/WEB-INF/applicationContext.xml
 		</param-value>
 	</context-param>
+    -->
 
 	<listener>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
@@ -35,6 +37,10 @@
 		<param-name>primefaces.FONT_AWESOME</param-name>
 		<param-value>true</param-value>
 	</context-param>
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+    </context-param>
 
 	<servlet>
 		<display-name>FacesServlet</display-name>

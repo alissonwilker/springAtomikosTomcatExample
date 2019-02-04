@@ -3,9 +3,8 @@ package org.fabriki.model.business.facade;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.fabriki.dto.InstituicaoDto;
+import org.fabriki.dto.mapper.IGenericMapper;
 import org.fabriki.dto.mapper.IInstituicaoMapper;
 import org.fabriki.model.business.InstituicaoBusiness;
 import org.fabriki.model.persistence.entity.Instituicao;
@@ -19,23 +18,25 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class InstituicaoBusinessFacade extends AbstractBusinessFacade<Instituicao, InstituicaoDto, Long> {
-    private static final long serialVersionUID = 1L;
     
     @Autowired
     protected IInstituicaoMapper mapper;
     
-    @PostConstruct
-    public void init() {
-        super.mapper = mapper;
-    }
+    @Autowired
+    private InstituicaoBusiness instituicaoBusiness;
+    
+    @Override
+	protected IGenericMapper<Instituicao, InstituicaoDto> getMapper() {
+    	return this.mapper;
+	}
 
     @Override
     protected InstituicaoBusiness getBusiness() {
-        return (InstituicaoBusiness) business;
+        return instituicaoBusiness;
     }
 
     public long getTotalCountPorUserLogin(String userLogin) {
-        return getBusiness().getTotalCountPorUserLogin(userLogin);
+        return instituicaoBusiness.getTotalCountPorUserLogin(userLogin);
     }
 
     public InstituicaoDto recuperarPorNome(String nomeInstituicao) {

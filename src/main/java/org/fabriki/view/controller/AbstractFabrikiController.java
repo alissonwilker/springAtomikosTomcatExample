@@ -8,9 +8,9 @@ import org.fabriki.utils.IFabrikiConstantes;
 import org.fabriki.view.utils.JsfUtils;
 
 public abstract class AbstractFabrikiController<D, P extends Serializable> extends AbstractController<D, P> {
-    private static final long serialVersionUID = 1L;
 
-    @PostConstruct
+    @Override
+	@PostConstruct
     public void init() {
         recuperarCredenciaisUsuarioLogado();
 
