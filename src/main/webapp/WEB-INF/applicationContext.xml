@@ -10,7 +10,7 @@
 
 	<context:component-scan
 		base-package="org.fabriki.*" />
-	<tx:annotation-driven />
+	<tx:annotation-driven proxy-target-class="true" />
 	<tx:jta-transaction-manager />
 
 	<bean class="java.net.URI" id="dbUrl">
@@ -52,6 +52,11 @@
 			<bean
 				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 			</bean>
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.enable_lazy_load_no_trans">true</prop>
+			</props>
 		</property>
 	</bean>
 

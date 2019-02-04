@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -39,7 +40,7 @@ public abstract class AbstractDao<E, P extends Serializable> implements IDao<E, 
     private static final long serialVersionUID = 1L;
     protected static final String LOG_TAG_PREFIX = " [SGBD]";
 
-    @PersistenceContext(unitName = "FabrikiPersistenceUnit")
+    @PersistenceContext(unitName = "FabrikiPersistenceUnit", type=PersistenceContextType.EXTENDED)
     protected EntityManager entityManager;
 
     private Class<?> domain;
